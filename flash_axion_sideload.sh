@@ -5,16 +5,15 @@
 # Prompts for dirty flash vs clean flash before installing.
 #
 # Dirty flash : no wipes, just install axion.zip over existing setup
-# Clean flash : wipe Dalvik / Cache / Data  (advanced wipe —
-#               does NOT touch internal storage / your files), then install
+# Clean flash : fastboot -w (userdata + metadata), then install
 #
 # Flow:
 #   1. Verify axion.zip exists
 #   2. Verify adb/fastboot available + device connected
 #   3. Ask user: dirty or clean flash
-#   4. fastboot reboot recovery
-#   5. Wait for full adb (device state = recovery)
-#   6. [clean only] run advanced wipe via adb shell twrp wipe ...
+#   4. [clean only] fastboot -w
+#   5. fastboot reboot recovery
+#   6. Wait for full adb (device state = recovery)
 #   7. adb shell twrp sideload
 #   8. Wait for sideload state
 #   9. adb sideload axion.zip
@@ -31,10 +30,6 @@ RECOVERY_WAIT_TIMEOUT=60      # seconds to wait for recovery state
 SIDELOAD_WAIT_TIMEOUT=30      # seconds to wait for sideload state
 POST_SIDELOAD_SETTLE=8        # seconds to wait after sideload completes (encrypted screen / minadbd handover)
 POLL_INTERVAL=1               # seconds between state checks
-
-# Partitions wiped on a clean flash. Does NOT include internal storage.
-# Edit if AxionOS's own install guide recommends a different set.
-CLEAN_WIPE_TARGETS=(dalvik cache data)
 
 # ---------- Colors ----------
 if [ -t 1 ]; then
@@ -119,7 +114,7 @@ elapsed() {
 ask_flash_type() {
     printf '\n  %sHow do you want to flash %s?%s\n\n' "$C_BOLD" "$AXION_ZIP" "$C_RESET"
     printf '    %s1)%s Dirty flash  %s— install over existing setup, no wipes%s\n' "$C_CYAN" "$C_RESET" "$C_DIM" "$C_RESET"
-    printf '    %s2)%s Clean flash  %s— wipe dalvik/cache/data first, then install%s\n' "$C_CYAN" "$C_RESET" "$C_DIM" "$C_RESET"
+    printf '    %s2)%s Clean flash  %s— fastboot -w (userdata + metadata), then install%s\n' "$C_CYAN" "$C_RESET" "$C_DIM" "$C_RESET"
     printf '        %s(internal storage / your files are NOT touched either way)%s\n\n' "$C_DIM" "$C_RESET"
 
     while true; do
@@ -168,7 +163,18 @@ ok "device detected"
 
 ask_flash_type
 
-# ---------- Step 2: Reboot to recovery ----------
+# ---------- Step 2: Wipe (clean flash only) ----------
+step "Wiping (${FLASH_TYPE} flash)"
+
+if [ "$FLASH_TYPE" = "clean" ]; then
+    info "running 'fastboot -w'..."
+    fastboot -w || die "'fastboot -w' failed."
+    ok "userdata + metadata wiped"
+else
+    info "dirty flash selected, skipping wipes"
+fi
+
+# ---------- Step 3: Reboot to recovery ----------
 step "Rebooting to recovery"
 
 if [ -n "$(get_fastboot_state)" ]; then
@@ -180,22 +186,6 @@ else
 fi
 
 wait_for_adb_state "recovery" "$RECOVERY_WAIT_TIMEOUT"
-
-# ---------- Step 3: Wipe (clean flash only) ----------
-step "Preparing install (${FLASH_TYPE} flash)"
-
-if [ "$FLASH_TYPE" = "clean" ]; then
-    for target in "${CLEAN_WIPE_TARGETS[@]}"; do
-        info "wiping ${target}..."
-        if adb shell "twrp wipe ${target}" >/dev/null 2>&1; then
-            ok "${target} wiped"
-        else
-            die "failed to wipe '${target}'. Check 'adb shell twrp wipe' is supported on this OFOX build."
-        fi
-    done
-else
-    info "dirty flash selected, skipping wipes"
-fi
 
 # ---------- Step 4: Trigger sideload mode ----------
 step "Entering sideload mode"
@@ -218,7 +208,7 @@ else
     die "adb sideload failed. Check cable/port, or that $AXION_ZIP is a valid signed zip."
 fi
 
-# ---------- Step 6: Settle + reboot ----------
+# ---------- Step 6: Wrapping up ----------
 step "Wrapping up"
 
 warn "screen may look frozen / show encrypted files right now — that's normal"
