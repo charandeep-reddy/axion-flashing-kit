@@ -10,8 +10,8 @@
 # Flow:
 #   1. Pre-flight checks (deps, device in fastboot mode)
 #   2. Bootloader unlock check
-#   3. Ask user: dirty or clean flash
-#   4. Extract axion.zip -> axion/images/ (skipped if already present + valid)
+#   3. Extract axion.zip -> axion/images/ (skipped if already present + valid)
+#   4. Ask user: dirty or clean flash
 #   5. [clean only] fastboot -w
 #   6. Flash static partitions (boot, vendor_boot, dtbo, vbmeta, vbmeta_system)
 #      + recovery (root-folder OFOX if found, otherwise payload's own)
@@ -164,11 +164,7 @@ else
     die "bootloader is not unlocked (reported: '${UNLOCKED:-unknown}'). Unlock it before flashing."
 fi
 
-# ---------- Step 3: Ask flash type ----------
-step "Choosing flash type"
-ask_flash_type
-
-# ---------- Step 4: Extract axion.zip ----------
+# ---------- Step 3: Extract axion.zip ----------
 step "Preparing images"
 
 if [ -d "$IMAGES_DIR" ] && [ -n "$(ls -A "$IMAGES_DIR" 2>/dev/null)" ]; then
@@ -210,6 +206,10 @@ else
     fi
     ok "all required images present"
 fi
+
+# ---------- Step 4: Ask flash type ----------
+step "Choosing flash type"
+ask_flash_type
 
 # ---------- Step 5: Wipe (clean flash only, after extraction) ----------
 step "Wiping (${FLASH_TYPE} flash)"
