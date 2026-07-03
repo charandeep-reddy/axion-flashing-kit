@@ -1,5 +1,5 @@
 ﻿#Requires -Version 5.1
-# flash_axion_sideload.ps1
+# flash_rom_sideload.ps1
 # Sideload-flashes ROM rom.zip via OFOX recovery on Poco F5 (marble)
 # Prompts for dirty flash vs clean flash before installing.
 #

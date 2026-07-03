@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# flash_axion_fastboot.sh
+# flash_rom_fastboot.sh
 # Flashes ROM on Poco F5 (marble) fully via fastboot/fastbootd — no sideload.
 # Requires device already sitting in fastboot (bootloader) mode.
 #
@@ -27,8 +27,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # ---------- Config ----------
 ROM_ZIP="${SCRIPT_DIR}/rom.zip"
-RECOVERY_IMG="${SCRIPT_DIR}/recovery.img"          # root-folder OFOX build (optional) — fallback is axion/images/recovery.img from payload
-ROM_DIR="${SCRIPT_DIR}/axion"
+RECOVERY_IMG="${SCRIPT_DIR}/recovery.img"          # root-folder OFOX build (optional) — fallback is rom/images/recovery.img from payload
+ROM_DIR="${SCRIPT_DIR}/rom"
 IMAGES_DIR="${ROM_DIR}/images"
 FASTBOOTD_WAIT_TIMEOUT=60
 POLL_INTERVAL=1

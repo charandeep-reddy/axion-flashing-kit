@@ -1,5 +1,5 @@
 ﻿#Requires -Version 5.1
-# flash_axion_fastboot.ps1
+# flash_rom_fastboot.ps1
 # Flashes ROM on Poco F5 (marble) fully via fastboot/fastbootd — no sideload.
 # Requires device already sitting in fastboot (bootloader) mode.
 #
@@ -9,7 +9,7 @@
 # Flow:
 #   1. Pre-flight checks (deps, device in fastboot mode)
 #   2. Bootloader unlock check
-#   3. Extract rom.zip -> axion/images/ (skipped if already present + valid)
+#   3. Extract rom.zip -> rom/images/ (skipped if already present + valid)
 #   4. Ask user: dirty or clean flash
 #   5. [clean only] fastboot -w
 #   6. Flash static partitions (boot, vendor_boot, dtbo, vbmeta, vbmeta_system)
@@ -24,8 +24,8 @@ $ErrorActionPreference = "Stop"
 
 # ---------- Config ----------
 $ROM_ZIP = "$PSScriptRoot\rom.zip"
-$RECOVERY_IMG = "$PSScriptRoot\recovery.img"          # root-folder OFOX build (optional) — fallback is axion/images/recovery.img from payload
-$ROM_DIR = "$PSScriptRoot\axion"
+$RECOVERY_IMG = "$PSScriptRoot\recovery.img"          # root-folder OFOX build (optional) — fallback is rom/images/recovery.img from payload
+$ROM_DIR = "$PSScriptRoot\rom"
 $IMAGES_DIR = "$ROM_DIR\images"
 $FASTBOOTD_WAIT_TIMEOUT = 60
 $POLL_INTERVAL = 1

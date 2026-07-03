@@ -1,4 +1,4 @@
-# common.ps1 — bundled binary resolution for axion-flashing-kit
+# common.ps1 — bundled binary resolution for marble-flashing-kit
 # Dot-sourced by the flash_*.ps1 scripts.
 
 $Script:KitRoot = $PSScriptRoot

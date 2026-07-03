@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# common.sh — bundled binary resolution for axion-flashing-kit
+# common.sh — bundled binary resolution for marble-flashing-kit
 #
 # Sourced by the flash_*.sh scripts. Expects die() to be defined by the caller.
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# flash_axion_sideload.sh
+# flash_rom_sideload.sh
 # Sideload-flashes ROM rom.zip via OFOX recovery on Poco F5 (marble)
 # Prompts for dirty flash vs clean flash before installing.
 #
