@@ -24,9 +24,9 @@
 set -uo pipefail
 
 # ---------- Config ----------
-AXION_ZIP="axion.zip"
-RECOVERY_IMG="recovery.img"          # root-folder OFOX build (optional) — fallback is axion/images/recovery.img from payload
-AXION_DIR="axion"
+AXION_ZIP="${SCRIPT_DIR}/axion.zip"
+RECOVERY_IMG="${SCRIPT_DIR}/recovery.img"          # root-folder OFOX build (optional) — fallback is axion/images/recovery.img from payload
+AXION_DIR="${SCRIPT_DIR}/axion"
 IMAGES_DIR="${AXION_DIR}/images"
 FASTBOOTD_WAIT_TIMEOUT=60
 POLL_INTERVAL=1

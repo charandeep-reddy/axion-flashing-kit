@@ -18,7 +18,7 @@
 $ErrorActionPreference = "Stop"
 
 # ---------- Config ----------
-$FIRMWARE_ZIP = "firmware.zip"
+$FIRMWARE_ZIP = "$PSScriptRoot\firmware.zip"
 $RECOVERY_WAIT_TIMEOUT = 60
 $SIDELOAD_WAIT_TIMEOUT = 30
 $POST_SIDELOAD_SETTLE = 8

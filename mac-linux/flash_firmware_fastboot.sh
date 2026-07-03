@@ -19,8 +19,8 @@
 set -uo pipefail
 
 # ---------- Config ----------
-FIRMWARE_ZIP="firmware.zip"
-FIRMWARE_DIR="firmware"
+FIRMWARE_ZIP="${SCRIPT_DIR}/firmware.zip"
+FIRMWARE_DIR="${SCRIPT_DIR}/firmware"
 UPDATE_DIR="${FIRMWARE_DIR}/firmware-update"
 
 partitions=(

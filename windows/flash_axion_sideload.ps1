@@ -24,7 +24,7 @@
 $ErrorActionPreference = "Stop"
 
 # ---------- Config ----------
-$AXION_ZIP = "axion.zip"
+$AXION_ZIP = "$PSScriptRoot\axion.zip"
 $RECOVERY_WAIT_TIMEOUT = 60
 $SIDELOAD_WAIT_TIMEOUT = 30
 $POST_SIDELOAD_SETTLE = 8

@@ -25,7 +25,7 @@
 set -uo pipefail
 
 # ---------- Config ----------
-AXION_ZIP="axion.zip"
+AXION_ZIP="${SCRIPT_DIR}/axion.zip"
 RECOVERY_WAIT_TIMEOUT=60      # seconds to wait for recovery state
 SIDELOAD_WAIT_TIMEOUT=30      # seconds to wait for sideload state
 POST_SIDELOAD_SETTLE=8        # seconds to wait after sideload completes (encrypted screen / minadbd handover)

@@ -23,9 +23,9 @@
 $ErrorActionPreference = "Stop"
 
 # ---------- Config ----------
-$AXION_ZIP = "axion.zip"
-$RECOVERY_IMG = "recovery.img"          # root-folder OFOX build (optional) — fallback is axion/images/recovery.img from payload
-$AXION_DIR = "axion"
+$AXION_ZIP = "$PSScriptRoot\axion.zip"
+$RECOVERY_IMG = "$PSScriptRoot\recovery.img"          # root-folder OFOX build (optional) — fallback is axion/images/recovery.img from payload
+$AXION_DIR = "$PSScriptRoot\axion"
 $IMAGES_DIR = "$AXION_DIR\images"
 $FASTBOOTD_WAIT_TIMEOUT = 60
 $POLL_INTERVAL = 1

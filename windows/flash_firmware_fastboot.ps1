@@ -18,8 +18,8 @@
 $ErrorActionPreference = "Stop"
 
 # ---------- Config ----------
-$FIRMWARE_ZIP = "firmware.zip"
-$FIRMWARE_DIR = "firmware"
+$FIRMWARE_ZIP = "$PSScriptRoot\firmware.zip"
+$FIRMWARE_DIR = "$PSScriptRoot\firmware"
 $UPDATE_DIR = "$FIRMWARE_DIR\firmware-update"
 
 $partitions = @(
