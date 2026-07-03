@@ -23,6 +23,8 @@
 
 set -uo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # ---------- Config ----------
 AXION_ZIP="${SCRIPT_DIR}/axion.zip"
 RECOVERY_IMG="${SCRIPT_DIR}/recovery.img"          # root-folder OFOX build (optional) — fallback is axion/images/recovery.img from payload
@@ -138,7 +140,6 @@ elapsed() {
 }
 
 # ---------- Bundled tools ----------
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/common.sh" || die "common.sh missing or corrupted"
 FASTBOOT="$(resolve_bundled_tool "platform-tools-${OS}" "fastboot")"
 PAYLOAD_DUMPER="$(resolve_bundled_tool "payload-dumper-go-${OS}" "payload-dumper-go")"

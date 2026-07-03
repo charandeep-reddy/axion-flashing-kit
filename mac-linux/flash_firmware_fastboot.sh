@@ -18,6 +18,8 @@
 
 set -uo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # ---------- Config ----------
 FIRMWARE_ZIP="${SCRIPT_DIR}/firmware.zip"
 FIRMWARE_DIR="${SCRIPT_DIR}/firmware"
@@ -77,7 +79,6 @@ elapsed() {
 }
 
 # ---------- Bundled tools ----------
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/common.sh" || die "common.sh missing or corrupted"
 FASTBOOT="$(resolve_bundled_tool "platform-tools-${OS}" "fastboot")"
 

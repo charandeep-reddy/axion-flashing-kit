@@ -18,6 +18,8 @@
 
 set -uo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # ---------- Config ----------
 FIRMWARE_ZIP="${SCRIPT_DIR}/firmware.zip"
 RECOVERY_WAIT_TIMEOUT=60      # seconds to wait for recovery state
@@ -106,7 +108,6 @@ elapsed() {
 }
 
 # ---------- Bundled tools ----------
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/common.sh" || die "common.sh missing or corrupted"
 ADB="$(resolve_bundled_tool "platform-tools-${OS}" "adb")"
 FASTBOOT="$(resolve_bundled_tool "platform-tools-${OS}" "fastboot")"
