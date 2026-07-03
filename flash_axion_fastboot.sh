@@ -5,14 +5,14 @@
 # Requires device already sitting in fastboot (bootloader) mode.
 #
 # Dirty flash : no wipes, straight install
-# Clean flash : fastboot -w (userdata + cache) run FIRST, before any flashing
+# Clean flash : fastboot -w (userdata + cache) after extraction, just before first flash
 #
 # Flow:
 #   1. Pre-flight checks (deps, device in fastboot mode)
 #   2. Bootloader unlock check
 #   3. Ask user: dirty or clean flash
-#   4. [clean only] fastboot -w
-#   5. Extract axion.zip -> axion/images/ (skipped if already present + valid)
+#   4. Extract axion.zip -> axion/images/ (skipped if already present + valid)
+#   5. [clean only] fastboot -w
 #   6. Flash static partitions (boot, vendor_boot, dtbo, vbmeta, vbmeta_system)
 #      + recovery (root-folder OFOX if found, otherwise payload's own)
 #   7. fastboot reboot fastboot -> wait for fastbootd
@@ -106,7 +106,7 @@ wait_for_fastbootd() {
 ask_flash_type() {
     printf '\n  %sHow do you want to flash %s?%s\n\n' "$C_BOLD" "$AXION_ZIP" "$C_RESET"
     printf '    %s1)%s Dirty flash  %s— install over existing setup, no wipes%s\n' "$C_CYAN" "$C_RESET" "$C_DIM" "$C_RESET"
-    printf '    %s2)%s Clean flash  %s— fastboot -w (userdata + cache) first, then install%s\n' "$C_CYAN" "$C_RESET" "$C_DIM" "$C_RESET"
+    printf '    %s2)%s Clean flash  %s— fastboot -w (userdata + cache) after extraction, then install%s\n' "$C_CYAN" "$C_RESET" "$C_DIM" "$C_RESET"
     printf '        %s(internal storage / your files are NOT touched either way)%s\n\n' "$C_DIM" "$C_RESET"
 
     while true; do
@@ -168,19 +168,7 @@ fi
 step "Choosing flash type"
 ask_flash_type
 
-# ---------- Step 4: Wipe (clean flash only, before anything else) ----------
-step "Wiping (${FLASH_TYPE} flash)"
-
-if [ "$FLASH_TYPE" = "clean" ]; then
-    [ -n "$(get_fastboot_state)" ] || die "device not in fastboot mode. Boot into fastboot first, then rerun."
-    info "running 'fastboot -w'..."
-    fastboot -w || die "'fastboot -w' failed."
-    ok "userdata + cache wiped"
-else
-    info "dirty flash selected, skipping wipe"
-fi
-
-# ---------- Step 5: Extract axion.zip ----------
+# ---------- Step 4: Extract axion.zip ----------
 step "Preparing images"
 
 if [ -d "$IMAGES_DIR" ] && [ -n "$(ls -A "$IMAGES_DIR" 2>/dev/null)" ]; then
@@ -221,6 +209,18 @@ else
         die "extraction finished but missing images for: ${missing[*]}."
     fi
     ok "all required images present"
+fi
+
+# ---------- Step 5: Wipe (clean flash only, after extraction) ----------
+step "Wiping (${FLASH_TYPE} flash)"
+
+if [ "$FLASH_TYPE" = "clean" ]; then
+    [ -n "$(get_fastboot_state)" ] || die "device not in fastboot mode. Boot into fastboot first, then rerun."
+    info "running 'fastboot -w'..."
+    fastboot -w || die "'fastboot -w' failed."
+    ok "userdata + cache wiped"
+else
+    info "dirty flash selected, skipping wipe"
 fi
 
 # ---------- Step 6: Flash static partitions + recovery ----------
